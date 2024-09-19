@@ -4,9 +4,6 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./components/Login";
 import IDCard from "./components/IDCard";
 import QRScanner from "./components/QRScanner";
-import Meeting from "./components/Meeting";
-import AttendanceRecords from "./components/Attendance";
-import Dashboard from "./components/Dashboard";
 
 function App() {
   return (
@@ -17,7 +14,6 @@ function App() {
         <Route path="/qr-scanner" element={<QRScanner />} />
         <Route path="/meeting" element={<Meeting />} />
         <Route path="/admin" element={<AttendanceRecords />} />
-        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
     </Router>
   );
