@@ -18,14 +18,13 @@ function Dashboard() {
   };
 
   if (!userData) {
-    navigate("/"); // Redirect to login if no user data is found
+    navigate("/");
     return null;
   }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="bg-white p-6 rounded-lg shadow-lg w-[600px] h-[550px] flex flex-col relative">
-        {/* Top Section with Hi User and Profile Icon */}
         <div className="flex justify-between items-center mb-6">
           <span className="text-lg font-bold">
             Hi, {userData?.firstname || "User"}! Welcome to Turnstile
