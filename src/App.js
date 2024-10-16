@@ -7,17 +7,20 @@ import QRScanner from "./components/QRScanner";
 import Meeting from "./components/Meeting";
 import AttendanceRecords from "./components/Attendance";
 import Dashboard from "./components/Dashboard";
+import Auth from "./components/Login";
+import TableList from "./components/TableList";
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
+        <Route path="/" element={<Auth />} />
         <Route path="/id-card" element={<IDCard />} />
-        <Route path="/qr-scanner" element={<QRScanner />} />
-        <Route path="/meeting" element={<Meeting />} />
+        <Route path="/qr-scanner/:courseId" element={<QRScanner />} />
+        {/* <Route path="/meeting" element={<Meeting />} /> */}
         <Route path="/admin" element={<AttendanceRecords />} />
         <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/table" element={<TableList />} />
       </Routes>
     </Router>
   );
