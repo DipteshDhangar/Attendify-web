@@ -6,10 +6,13 @@ import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useSelector } from "react-redux";
 
-const API_URL = process.env.REACT_APP_URL || "http://localhost:8000";
+const API_URL = process.env.REACT_APP_URL;
 
 function QRScanner() {
   const { courseId } = useParams();
+  const selectedCourseId = useSelector(
+    (state) => state.course.selectedCourseId
+  );
   const { user } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const scannerRef = useRef(null); // Keep scanner reference
@@ -47,7 +50,7 @@ function QRScanner() {
   const handleScan = async (decodedText) => {
     if (!decodedText) return; // Ignore empty scans
 
-    const confirmed = window.confirm(`Scanned email: ${decodedText}. Proceed?`);
+    const confirmed = window.confirm(`scan complete, Proceed?`);
 
     if (confirmed) {
       if (decodedText === user.email) {
@@ -56,13 +59,15 @@ function QRScanner() {
         try {
           const response = await axios.post(
             `${API_URL}/api/MarkAttendanceDummy`,
-            { email: decodedText, course: courseId },
+            { email: decodedText, course: selectedCourseId },
             { headers: { "Content-Type": "application/json" } }
           );
 
           if (response.status === 200) {
             toast.success("Attendance marked successfully.");
-            navigate("/dashboard", { state: { userData: courseId } });
+            navigate(`/meeting/${selectedCourseId}`, {
+              state: { userData: courseId },
+            });
           } else {
             toast.error(`Failed: ${response.data.message || "Error"}`);
           }
@@ -88,12 +93,16 @@ function QRScanner() {
         <div id="reader" style={{ width: "100%" }} />
 
         {!isScannerActive && (
-          <button
-            onClick={startScanner}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-          >
-            Start Scanner
-          </button>
+          <div className="flex justify-center mt-4">
+            {" "}
+            {/* Center the button */}
+            <button
+              onClick={startScanner}
+              className="px-4 py-2 bg-blue-500 text-white rounded"
+            >
+              Start Scanner
+            </button>
+          </div>
         )}
 
         <ToastContainer />

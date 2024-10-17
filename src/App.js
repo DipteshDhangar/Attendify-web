@@ -17,8 +17,8 @@ function App() {
         <Route path="/" element={<Auth />} />
         <Route path="/id-card" element={<IDCard />} />
         <Route path="/qr-scanner/:courseId" element={<QRScanner />} />
-        {/* <Route path="/meeting" element={<Meeting />} /> */}
-        <Route path="/admin" element={<AttendanceRecords />} />
+        <Route path="/meeting/:courseId" element={<Meeting />} />
+        <Route path="/admin/:courseId" element={<AttendanceRecords />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/table" element={<TableList />} />
       </Routes>

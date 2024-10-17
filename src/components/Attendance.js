@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
-const API_URL = process.env.REACT_APP_URL || "http://localhost:8000";
+const API_URL = process.env.REACT_APP_URL;
 
 const AttendanceRecords = () => {
   const [users, setUsers] = useState([]); // State to store users
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [selectedUsers, setSelectedUsers] = useState([]); // State to store selected users
+  const { courseId } = useParams();
 
   const navigate = useNavigate(); // Hook for navigation
 
@@ -16,10 +17,13 @@ const AttendanceRecords = () => {
     // Fetch user details for present attendance
     const fetchUsersWithAttendance = async () => {
       try {
-        const response = await axios.get(`${API_URL}/api/FetchAttendance`);
+        const response = await axios.get(
+          `${API_URL}/api/FetchAttendanceDummy/${courseId}`
+        );
         if (response.status === 200) {
-          const uniqueUsers = response.data.users.filter(
-            (v, i, a) => a.findIndex((t) => t.user.email === v.user.email) === i
+          const uniqueUsers = response.data.filter(
+            (v, i, a) =>
+              a.findIndex((t) => t.student.email === v.student.email) === i
           );
           setUsers(uniqueUsers); // Store users with unique email addresses
           setLoading(false);
@@ -35,18 +39,16 @@ const AttendanceRecords = () => {
     };
 
     fetchUsersWithAttendance();
-  }, []);
+  }, [courseId]);
 
-  // Handler for selecting all users
   const handleSelectAll = (e) => {
     if (e.target.checked) {
-      setSelectedUsers(users.map((user) => user.user._id)); // Select all users
+      setSelectedUsers(users.map((user) => user._id));
     } else {
-      setSelectedUsers([]); // Deselect all users
+      setSelectedUsers([]);
     }
   };
 
-  // Handler for selecting individual user
   const handleSelectUser = (userId) => {
     if (selectedUsers.includes(userId)) {
       setSelectedUsers(selectedUsers.filter((id) => id !== userId)); // Deselect user
@@ -61,7 +63,7 @@ const AttendanceRecords = () => {
   };
 
   const handleBackToLogin = () => {
-    navigate("/");
+    navigate("/table");
   };
 
   if (loading) {
@@ -82,7 +84,7 @@ const AttendanceRecords = () => {
           className="px-4 py-2 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500"
           onClick={handleBackToLogin}
         >
-          Back to Login
+          Back to dashboard
         </button>
       </div>
       <div className="overflow-x-auto">
@@ -109,29 +111,33 @@ const AttendanceRecords = () => {
           <tbody>
             {users.map((entry, index) => (
               <tr
-                key={entry.user._id}
+                key={entry._id}
                 className="border-b border-gray-200 hover:bg-gray-50"
               >
                 <td className="py-3 px-4 text-left">
                   <input
                     type="checkbox"
-                    checked={selectedUsers.includes(entry.user._id)}
-                    onChange={() => handleSelectUser(entry.user._id)}
+                    checked={selectedUsers.includes(entry._id)}
+                    onChange={() => handleSelectUser(entry._id)}
                     className="form-checkbox"
                   />
                 </td>
                 <td className="py-3 px-4 text-left">{index + 1}</td>
-                <td className="py-3 px-4 text-left">{entry.user.firstname}</td>
-                <td className="py-3 px-4 text-left">{entry.user.lastname}</td>
-                <td className="py-3 px-4 text-left">{entry.user.email}</td>
                 <td className="py-3 px-4 text-left">
-                  {entry.user.license || "NA"}
+                  {entry.student.firstname || "N/A"}
                 </td>
                 <td className="py-3 px-4 text-left">
-                  {new Date(entry.scannedAt).toLocaleString()}
+                  {entry.student.lastname || "N/A"}
+                </td>
+                <td className="py-3 px-4 text-left">{entry.student.email}</td>
+                <td className="py-3 px-4 text-left">
+                  {entry.student.license || "NA"}
                 </td>
                 <td className="py-3 px-4 text-left">
-                  {entry.user.email_verified ? "Yes" : "No"}
+                  {new Date(entry.scannedAt).toLocaleString() || "N/A"}
+                </td>
+                <td className="py-3 px-4 text-left">
+                  {entry.student.email_verified ? "Yes" : "No"}
                 </td>
               </tr>
             ))}

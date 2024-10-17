@@ -1,26 +1,31 @@
 import React, { useState, useEffect } from "react";
-import { FaCheckCircle, FaEye } from "react-icons/fa"; // Import icons
-import { useNavigate } from "react-router-dom"; // Import useNavigate hook
+import { FaCheckCircle, FaEye } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setSelectedCourseId } from "./slices/courseSlice";
+
+const API_URL = process.env.REACT_APP_URL;
 
 const TableList = () => {
   const [tableData, setTableData] = useState([]);
-  const navigate = useNavigate(); // Initialize navigate
+  const navigate = useNavigate();
+  const dispatch = useDispatch(); // Get the dispatch function
 
   useEffect(() => {
-    fetch("http://localhost:8000/api/getTable")
+    fetch(`${API_URL}/api/getTable`)
       .then((response) => response.json())
       .then((data) => setTableData(data))
       .catch((error) => console.error("Error fetching table data:", error));
   }, []);
 
   const handleMarkAttendance = (courseId) => {
-    // Navigate to dashboard and pass the courseId in the state
+    dispatch(setSelectedCourseId(courseId)); // Dispatch the course ID to Redux
     navigate("/dashboard", { state: { userData: courseId } });
   };
 
   const handleFetchAttendance = (courseId) => {
-    alert(`Fetching attendance for Course ID: ${courseId}`);
-    // Add any logic to fetch attendance data if needed
+    dispatch(setSelectedCourseId(courseId)); // Dispatch the course ID to Redux
+    navigate(`/admin/${courseId}`);
   };
 
   return (

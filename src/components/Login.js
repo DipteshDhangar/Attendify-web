@@ -7,7 +7,7 @@ import { setUser } from "./slices/authslice";
 
 import "react-toastify/dist/ReactToastify.css";
 
-const API_URL = process.env.REACT_APP_URL || "http://localhost:8000";
+const API_URL = process.env.REACT_APP_URL;
 
 function Auth() {
   const [isSignup, setIsSignup] = useState(false);
@@ -181,12 +181,12 @@ function Auth() {
         </p>
 
         <p className="text-center mt-4">
-          <button
+          {/* <button
             onClick={navigateToAdmin}
             className="text-blue-500 hover:underline text-sm"
           >
             Login as Admin
-          </button>
+          </button> */}
         </p>
 
         <ToastContainer />
