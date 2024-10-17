@@ -61,7 +61,7 @@ function Auth() {
         { headers: { "Content-Type": "application/json" } }
       );
 
-      if (response.status === 201) {
+      if (response.status === 200) {
         dispatch(setUser(email));
         toast.success("Success: Account created successfully!");
         setIsSignup(false); // Switch to login after successful signup
